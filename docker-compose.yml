@@ -1,0 +1,85 @@
+networks:
+  hadoop-spark-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+
+services:
+  namenode:
+    image: hadoop-spark:latest
+    container_name: namenode
+    hostname: namenode
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    command: ["/usr/local/bin/entrypoint.sh", "/usr/local/hadoop/bin/hdfs", "namenode"]
+    ports:
+      - "9000:9000"
+      - "9870:9870"
+      - "8088:8088"
+      - "8080:8080"
+    volumes:
+      - ./data/namenode:/usr/local/hadoop/hadoop_data/hdfs/namenode
+      - ./data/uploads:/data/uploads  # Ajout du dossier uploads
+    environment:
+      - CONTAINER_NAMES=namenode datanode1 datanode2 datanode3
+      - HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+
+    networks:
+      hadoop-spark-net:
+        ipv4_address: 172.28.0.2
+    extra_hosts:
+        - "datanode1:172.28.0.3"
+        - "datanode2:172.28.0.4"
+
+  datanode1:
+    image: hadoop-spark:latest
+    container_name: datanode1
+    hostname: datanode1
+    command: /usr/local/hadoop/bin/hdfs datanode
+    volumes:
+      - ./data/datanode1:/usr/local/hadoop/hadoop_data/hdfs/datanode
+    environment:
+      - CONTAINER_NAMES=namenode datanode1 datanode2 datanode3
+    networks:
+      hadoop-spark-net:
+        ipv4_address: 172.28.0.3
+    extra_hosts:
+        - "namenode:172.28.0.2"
+        - "datanode2:172.28.0.4"
+        - "datanode3:172.28.0.5"
+
+  datanode2:
+    image: hadoop-spark:latest
+    container_name: datanode2
+    hostname: datanode2
+    command: /usr/local/hadoop/bin/hdfs datanode
+    volumes:
+      - ./data/datanode2:/usr/local/hadoop/hadoop_data/hdfs/datanode
+    environment:
+      - CONTAINER_NAMES=namenode datanode1 datanode2 datanode3
+    networks:
+      hadoop-spark-net:
+        ipv4_address: 172.28.0.4
+    extra_hosts:
+        - "namenode:172.28.0.2"
+        - "datanode1:172.28.0.3"
+        - "datanode3:172.28.0.5"
+
+  datanode3:
+    image: hadoop-spark:latest
+    container_name: datanode3
+    hostname: datanode3
+    command: /usr/local/hadoop/bin/hdfs datanode
+    volumes:
+      - ./data/datanode3:/usr/local/hadoop/hadoop_data/hdfs/datanode
+    environment:
+      - CONTAINER_NAMES=namenode datanode1 datanode2 datanode3
+    networks:
+      hadoop-spark-net:
+        ipv4_address: 172.28.0.5
+    extra_hosts:
+        - "namenode:172.28.0.2"
+        - "datanode1:172.28.0.3"
+        - "datanode2:172.28.0.4"
