@@ -55,6 +55,3 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 USER root
 
 EXPOSE 22 9000 8042 8041 8040 8088 8042 4040 8888 8080 19888 7077
-
-COPY entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh

@@ -21,7 +21,7 @@ services:
       - "8080:8080"
     volumes:
       - ./data/namenode:/usr/local/hadoop/hadoop_data/hdfs/namenode
-      - ./data/uploads:/data/uploads  # Ajout du dossier uploads
+      - ./data/uploads:/data/uploads
     environment:
       - CONTAINER_NAMES=namenode datanode1 datanode2 datanode3
       - HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop

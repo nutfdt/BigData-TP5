@@ -25,13 +25,9 @@ print(suicide_data['country'].unique())
 # Dictionnaire pour corriger les correspondances
 name_corrections = {
     "united states": "united states of america",
-    "united republic of tanzania": "tanzania",
     "republic of korea": "south korea",
     "serbia": "republic of serbia",
-    "colombia": "colombia",
-    "kazakhstan": "kazakhstan",
     "russian federation": "russia",
-    "puerto rico": "puerto rico",
     "czech republic": "czechia",
 }
 

@@ -9,7 +9,6 @@ spark = SparkSession.builder \
 
 # Charger les données depuis un fichier local
 df = spark.read.load("../data/uploads/master.csv", format="csv", sep=",", inferSchema=True, header="true")
-df.show(10)  # Action qui déclenche un job Spark
 
 # Filtrer pour garder uniquement les années entre 2010 et 2016
 filtered_df = df.filter((col("year") >= 2010) & (col("year") <= 2016))
@@ -27,8 +26,6 @@ for filename in os.listdir(output_dir_avg):
         os.rename(os.path.join(output_dir_avg, filename), os.path.join(output_dir_avg, "average_suicides_per_100k.csv"))
         break
 
-print("Fichier des données agrégées créé avec succès.")
-
 # Calculer la moyenne de "suicides/100k pop" par pays et sexe
 average_suicides_gender_df = filtered_df.groupBy("country", "sex").agg(
     avg("suicides/100k pop").alias("avg_suicides_per_100k")
@@ -43,8 +40,6 @@ for filename in os.listdir(output_dir_avg):
     if filename.startswith("part-"):
         os.rename(os.path.join(output_dir_avg, filename), os.path.join(output_dir_avg, "average_suicides_per_100k_with_sex.csv"))
         break
-
-print("Fichier des données agrégées (avec sexe) créé avec succès.")
 
 # Filtrer les données pour ne garder que la France
 france_data = filtered_df.filter(col("country") == "France")
@@ -66,8 +61,6 @@ for filename in os.listdir(output_dir_avg_france):
     if filename.startswith("part-"):
         os.rename(os.path.join(output_dir_avg_france, filename), os.path.join(output_dir_avg_france, "average_suicides_france.csv"))
         break
-
-print("Fichier des données agrégées pour la France créé avec succès.")
 
 # Sélectionner les colonnes nécessaires
 result_df = filtered_df.select(
@@ -103,5 +96,3 @@ for filename in os.listdir(output_dir_result):
     if filename.startswith("part-"):
         os.rename(os.path.join(output_dir_result, filename), os.path.join(output_dir_result, "result-suicide-analysis.csv"))
         break
-
-print("Script exécuté avec succès.")
